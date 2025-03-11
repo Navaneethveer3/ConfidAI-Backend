@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-#i#2)ab!(mcyricqs9nuqso*3@!%b8p-92=42f&n^w8wm769c@'
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-#i#2)ab!(mcyricqs9nuqso*3@!%b8p-92=42f&n^w8wm769c@')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -29,7 +29,7 @@ DEBUG = False
 ALLOWED_HOSTS = [
     "https://localhost:3000",
     "127.0.0.1",
-    "https://confidai.netlify.app",
+    "confidai.netlify.app",
     "confidai.onrender.com",
 ]
 
@@ -62,7 +62,12 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     
 ]
-CORS_ALLOW_ALL_ORIGINS = False
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "https://confidai.netlify.app",
+]
 
 ROOT_URLCONF = 'backend.urls'
 
@@ -91,7 +96,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': '/var/lib/sqlite3/db.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
@@ -129,7 +134,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
-import os
+
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Default primary key field type
